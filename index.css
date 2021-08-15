@@ -69,8 +69,19 @@ label{
     text-align:center;
 }
 .icon{
-    color:red;
     cursor:pointer;
+}
+
+.delete-icon{
+    color:red;
+}
+
+.edit-icon{
+    color:white;
+}
+
+.move-icon{
+    cursor:move;
 }
 
 .todo-list{
@@ -97,4 +108,5 @@ label{
     justify-content: space-between;
     border-left: 1px solid white;
     padding:1rem;
+    flex-basis:20%;
 }
