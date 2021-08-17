@@ -1,15 +1,17 @@
-function refresh() {
-    window.location.href = window.location.pathname
+function refresh(parentNode, db) {
+    parentNode.innerHTML = ''
+    loadTodos(db, parentNode)
 }
 
-function insertTodos(db, todos) {
+function insertTodos(db, parentNode, todos) {
     db.setItem('todos', JSON.stringify(todos))
 
-    refresh()
+
+    refresh(parentNode, db)
 
 }
 
-function deleteTodo(db, todo) {
+function deleteTodo(db, parentNode, todo) {
     const todos = JSON.parse(db.getItem('todos'))
     const newTodos = todos.filter(todoItem => {
         const todoParsed = JSON.parse(todoItem)
@@ -18,7 +20,7 @@ function deleteTodo(db, todo) {
     })
 
     db.setItem('todos', JSON.stringify(newTodos))
-    refresh()
+    refresh(parentNode, db)
 }
 
 function createTodo(parentNode, db, todo) {
@@ -30,6 +32,8 @@ function createTodo(parentNode, db, todo) {
     const spanEdit = document.createElement('span')
     const spanMove = document.createElement('span')
     const label = document.createElement('label')
+    const editInput = document.createElement('input')
+    editInput.type = 'text'
     const checkbox = document.createElement('input')
     checkbox.type = 'checkbox'
     checkbox.checked = todo.inProgress
@@ -48,7 +52,16 @@ function createTodo(parentNode, db, todo) {
     spanEdit.classList.add('material-icons', 'edit-icon', 'icon');
     spanMove.classList.add('material-icons', 'move-icon')
 
-    spanDelete.onclick = () => deleteTodo(db, todo)
+    spanDelete.onclick = () => deleteTodo(db, parentNode, todo)
+    spanEdit.onclick = () => {
+        divContent.textContent = ''
+        editInput.value = todo.content
+        divContent.append(editInput)
+    }
+
+    checkbox.onchange = () => {
+        todo.inProgress = checkbox.checked
+    }
 
     divTodo.append(divContent, divOptions)
     divOptions.append(spanDelete, spanEdit, spanMove, label)

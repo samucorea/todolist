@@ -19,10 +19,12 @@ insertButton.onclick = () => {
         hasFinished: false
     }
 
+    inputTodo.value = ''
+
     todos.unshift(JSON.stringify(todo))
     console.log(todos)
 
-    insertTodos(db, todos)
+    insertTodos(db, todoList, todos)
 }
 
 loadTodos(db, todoList)
