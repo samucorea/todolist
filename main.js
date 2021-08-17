@@ -5,10 +5,14 @@ const toolbarInProgressCheckBox = document.querySelector('.input-in-progress')
 
 toolbarInProgressCheckBox.checked = true
 const db = window.localStorage
-const todos = db.getItem('todos') ? JSON.parse(db.getItem('todos')) : []
+// const todos = db.getItem('todos') ? JSON.parse(db.getItem('todos')) : []
 
 
-const parentNode = document.querySelector('.todo-list')
+inputTodo.addEventListener('keydown', e => {
+    if (e.key === 'Enter') {
+        insertButton.click()
+    }
+})
 
 
 insertButton.onclick = () => {
@@ -16,15 +20,14 @@ insertButton.onclick = () => {
         key: Math.random(1, 100),
         content: inputTodo.value,
         inProgress: toolbarInProgressCheckBox.checked,
-        hasFinished: false
+        hasFinished: false,
+        createdAt: new Date().getTime()
     }
 
     inputTodo.value = ''
 
-    todos.unshift(JSON.stringify(todo))
-    console.log(todos)
 
-    insertTodos(db, todoList, todos)
+    insertTodo(db, todoList, todo)
 }
 
 loadTodos(db, todoList)

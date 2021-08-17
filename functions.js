@@ -1,10 +1,12 @@
+let editing = false;
+
 function refresh(parentNode, db) {
     parentNode.innerHTML = ''
     loadTodos(db, parentNode)
 }
 
-function insertTodos(db, parentNode, todos) {
-    db.setItem('todos', JSON.stringify(todos))
+function insertTodo(db, parentNode, todo) {
+    db.setItem(todo.key, JSON.stringify(todo))
 
 
     refresh(parentNode, db)
@@ -12,16 +14,17 @@ function insertTodos(db, parentNode, todos) {
 }
 
 function deleteTodo(db, parentNode, todo) {
-    const todos = JSON.parse(db.getItem('todos'))
-    const newTodos = todos.filter(todoItem => {
-        const todoParsed = JSON.parse(todoItem)
 
-        return todoParsed.key !== todo.key
-    })
-
-    db.setItem('todos', JSON.stringify(newTodos))
+    db.removeItem(todo.key)
     refresh(parentNode, db)
 }
+
+function updateTodo(db, todoUpdated) {
+    db.setItem(todoUpdated.key, JSON.stringify(todoUpdated))
+
+    refresh(todoList, db)
+}
+
 
 function createTodo(parentNode, db, todo) {
     const divTodo = document.createElement('div')
@@ -33,17 +36,22 @@ function createTodo(parentNode, db, todo) {
     const spanMove = document.createElement('span')
     const label = document.createElement('label')
     const editInput = document.createElement('input')
-    editInput.type = 'text'
     const checkbox = document.createElement('input')
+    const editButton = document.createElement('button')
+
+    editInput.type = 'text'
+    editInput.maxLength = inputTodo.maxLength
     checkbox.type = 'checkbox'
     checkbox.checked = todo.inProgress
 
+
+    editButton.textContent = 'Edit'
     divContent.textContent = todo.content
     spanDelete.textContent = 'delete_forever'
     spanEdit.textContent = 'edit'
     spanMove.textContent = 'open_with'
     label.textContent = 'P'
-
+    divTodo.style.opacity = '1'
 
     divTodo.classList.add('todo')
     divContent.classList.add('content')
@@ -51,16 +59,38 @@ function createTodo(parentNode, db, todo) {
     spanDelete.classList.add('material-icons', 'delete-icon', 'icon')
     spanEdit.classList.add('material-icons', 'edit-icon', 'icon');
     spanMove.classList.add('material-icons', 'move-icon')
+    editInput.classList.add('edit-input')
 
     spanDelete.onclick = () => deleteTodo(db, parentNode, todo)
     spanEdit.onclick = () => {
+        if (editing) {
+            return
+        }
+        else {
+            editing = true;
+        }
         divContent.textContent = ''
         editInput.value = todo.content
-        divContent.append(editInput)
+        divContent.append(editInput, editButton)
+
+        document.addEventListener('keydown', e => {
+
+            if (e.key === 'Escape') {
+                divContent.innerHTML = ''
+                divContent.textContent = todo.content
+            }
+        })
+
+        editButton.onclick = e => {
+            editing = false;
+            todo.content = editInput.value
+            updateTodo(db, todo)
+        }
     }
 
-    checkbox.onchange = () => {
-        todo.inProgress = checkbox.checked
+    checkbox.onchange = e => {
+        todo.inProgress = e.target.checked
+        insertTodo(db, parentNode, todo)
     }
 
     divTodo.append(divContent, divOptions)
@@ -70,17 +100,28 @@ function createTodo(parentNode, db, todo) {
     parentNode.append(divTodo)
 
 
+
 }
 
 function loadTodos(db, parentNode) {
-    const todos = JSON.parse(db.getItem('todos'))
+    const keys = Object.keys(db)
+    const todos = []
 
-    if (todos === null) {
-        return
+    for (const key of keys) {
+        const todo = JSON.parse(db.getItem(key))
+        todos.push(todo)
     }
 
+    todos.sort(function compareDates(todoA, todoB) {
+        if (todoA.createdAt < todoB.createdAt) {
+            return 1;
+        }
+        else {
+            return -1;
+        }
+    })
 
     for (const todo of todos) {
-        createTodo(parentNode, db, JSON.parse(todo))
+        createTodo(parentNode, db, todo)
     }
 }
