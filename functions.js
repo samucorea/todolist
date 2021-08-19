@@ -1,6 +1,6 @@
-let editing = false;
 
-function refresh(parentNode, db) {
+
+function refresh(parentNode, db, tempTodo = null) {
     parentNode.innerHTML = ''
     loadTodos(db, parentNode)
 }
@@ -25,6 +25,42 @@ function updateTodo(db, todoUpdated) {
     refresh(todoList, db)
 }
 
+function handleEdit(todo, divContent, editInput, editButton) {
+
+    const overlay = document.querySelector('.overlay')
+    divContent.textContent = ''
+    editInput.value = todo.content
+
+    divContent.append(editInput, editButton)
+
+    divContent.classList.add('editing-content')
+    overlay.style.display = 'initial'
+    editInput.focus();
+
+    editInput.addEventListener('keydown', e => {
+        if (e.key === 'Enter') {
+            editButton.click()
+        }
+    })
+
+    document.addEventListener('keydown', e => {
+
+        if (e.key === 'Escape') {
+            divContent.innerHTML = ''
+            divContent.textContent = todo.content
+            divContent.classList.remove('editing-content')
+            overlay.style.display = 'none'
+        }
+
+    })
+
+    editButton.onclick = e => {
+        todo.content = editInput.value
+        divContent.classList.remove('editing-content')
+        updateTodo(db, todo)
+        overlay.style.display = 'none'
+    }
+}
 
 function createTodo(parentNode, db, todo) {
     const divTodo = document.createElement('div')
@@ -51,7 +87,6 @@ function createTodo(parentNode, db, todo) {
     spanEdit.textContent = 'edit'
     spanMove.textContent = 'open_with'
     label.textContent = 'P'
-    divTodo.style.opacity = '1'
 
     divTodo.classList.add('todo')
     divContent.classList.add('content')
@@ -59,38 +94,15 @@ function createTodo(parentNode, db, todo) {
     spanDelete.classList.add('material-icons', 'delete-icon', 'icon')
     spanEdit.classList.add('material-icons', 'edit-icon', 'icon');
     spanMove.classList.add('material-icons', 'move-icon')
+    editButton.classList.add('edit-button')
     editInput.classList.add('edit-input')
 
     spanDelete.onclick = () => deleteTodo(db, parentNode, todo)
-    spanEdit.onclick = () => {
-        if (editing) {
-            return
-        }
-        else {
-            editing = true;
-        }
-        divContent.textContent = ''
-        editInput.value = todo.content
-        divContent.append(editInput, editButton)
-
-        document.addEventListener('keydown', e => {
-
-            if (e.key === 'Escape') {
-                divContent.innerHTML = ''
-                divContent.textContent = todo.content
-            }
-        })
-
-        editButton.onclick = e => {
-            editing = false;
-            todo.content = editInput.value
-            updateTodo(db, todo)
-        }
-    }
+    spanEdit.onclick = () => handleEdit(todo, divContent, editInput, editButton)
 
     checkbox.onchange = e => {
         todo.inProgress = e.target.checked
-        insertTodo(db, parentNode, todo)
+        updateTodo(db, todo)
     }
 
     divTodo.append(divContent, divOptions)
