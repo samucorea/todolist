@@ -26,7 +26,6 @@ function updateTodo(db, todoUpdated) {
 }
 
 function handleEdit(todo, divContent, editInput, editButton) {
-
     const overlay = document.querySelector('.overlay')
     divContent.textContent = ''
     editInput.value = todo.content
@@ -70,23 +69,27 @@ function createTodo(parentNode, db, todo) {
     const spanDelete = document.createElement('span')
     const spanEdit = document.createElement('span')
     const spanMove = document.createElement('span')
-    const label = document.createElement('label')
+    const inProgressLabel = document.createElement('label')
+    const inProgressCheckBox = document.createElement('input')
+    const hasFinishedLabel = document.createElement('label')
+    const hasFinishedCheckBox = document.createElement('input')
     const editInput = document.createElement('input')
-    const checkbox = document.createElement('input')
     const editButton = document.createElement('button')
 
     editInput.type = 'text'
     editInput.maxLength = inputTodo.maxLength
-    checkbox.type = 'checkbox'
-    checkbox.checked = todo.inProgress
-
+    inProgressCheckBox.type = 'checkbox'
+    inProgressCheckBox.checked = todo.inProgress
+    hasFinishedCheckBox.type = 'checkbox'
+    hasFinishedCheckBox.checked = todo.hasFinished
 
     editButton.textContent = 'Edit'
     divContent.textContent = todo.content
     spanDelete.textContent = 'delete_forever'
     spanEdit.textContent = 'edit'
     spanMove.textContent = 'open_with'
-    label.textContent = 'P'
+    inProgressLabel.textContent = 'P'
+    hasFinishedLabel.textContent = 'F'
 
     divTodo.classList.add('todo')
     divContent.classList.add('content')
@@ -97,17 +100,33 @@ function createTodo(parentNode, db, todo) {
     editButton.classList.add('edit-button')
     editInput.classList.add('edit-input')
 
+    if (todo.inProgress) {
+        hasFinishedLabel.style.display = ''
+    }
+    else {
+        hasFinishedLabel.style.display = 'none'
+    }
+
+
     spanDelete.onclick = () => deleteTodo(db, parentNode, todo)
     spanEdit.onclick = () => handleEdit(todo, divContent, editInput, editButton)
 
-    checkbox.onchange = e => {
+    inProgressCheckBox.onchange = e => {
         todo.inProgress = e.target.checked
+        todo.hasFinished = e.target.checked ? todo.hasFinished : false;
+        updateTodo(db, todo)
+    }
+
+    hasFinishedCheckBox.onchange = e => {
+        todo.hasFinished = e.target.checked
         updateTodo(db, todo)
     }
 
     divTodo.append(divContent, divOptions)
-    divOptions.append(spanDelete, spanEdit, spanMove, label)
-    label.append(checkbox)
+    inProgressLabel.append(inProgressCheckBox)
+    hasFinishedLabel.append(hasFinishedCheckBox)
+    divOptions.append(spanDelete, spanEdit, spanMove, inProgressLabel, hasFinishedLabel)
+
 
     parentNode.append(divTodo)
 

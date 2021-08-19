@@ -3,7 +3,6 @@ const inputTodo = document.querySelector('.input-todo')
 const insertButton = document.querySelector('button')
 const toolbarInProgressCheckBox = document.querySelector('.input-in-progress')
 const errorMessage = document.querySelector('.error-message')
-toolbarInProgressCheckBox.checked = true
 const db = window.localStorage
 // const todos = db.getItem('todos') ? JSON.parse(db.getItem('todos')) : []
 
