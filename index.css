@@ -109,6 +109,7 @@ label{
     justify-content: space-between;
     border: 1px solid white;
     padding:1rem;
+    margin: 2rem 0;
     transition: opacity 1s ease-in;
 }
 
@@ -116,7 +117,8 @@ label{
     font-size:2.4rem;
     font-weight: 300;
     display:flex;
-    flex-basis:50%;
+    justify-content: space-between;
+    flex-basis:75%;
 }
 
 .options{
@@ -125,12 +127,12 @@ label{
     justify-content: space-between;
     border-left: 1px solid white;
     padding:1rem;
-    flex-basis:30%;
+    flex-basis:20%;
 }
 
 
 input.edit-input{
-    width:100%;
+    width:75%;
 }
 
 button.edit-button{

@@ -19,13 +19,13 @@ function deleteTodo(db, parentNode, todo) {
     refresh(parentNode, db)
 }
 
-function updateTodo(db, todoUpdated) {
+function updateTodo(db, parentNode, todoUpdated) {
     db.setItem(todoUpdated.key, JSON.stringify(todoUpdated))
 
-    refresh(todoList, db)
+    refresh(parentNode, db)
 }
 
-function handleEdit(todo, divContent, editInput, editButton) {
+function handleEdit(db, todo, parentNode, divContent, editInput, editButton) {
     const overlay = document.querySelector('.overlay')
     divContent.textContent = ''
     editInput.value = todo.content
@@ -51,15 +51,18 @@ function handleEdit(todo, divContent, editInput, editButton) {
             overlay.style.display = 'none'
         }
 
+
+
     })
 
     editButton.onclick = e => {
         todo.content = editInput.value
         divContent.classList.remove('editing-content')
-        updateTodo(db, todo)
+        updateTodo(db, parentNode, todo)
         overlay.style.display = 'none'
     }
 }
+
 
 function createTodo(parentNode, db, todo) {
     const divTodo = document.createElement('div')
@@ -68,7 +71,6 @@ function createTodo(parentNode, db, todo) {
 
     const spanDelete = document.createElement('span')
     const spanEdit = document.createElement('span')
-    const spanMove = document.createElement('span')
     const inProgressLabel = document.createElement('label')
     const inProgressCheckBox = document.createElement('input')
     const hasFinishedLabel = document.createElement('label')
@@ -87,7 +89,6 @@ function createTodo(parentNode, db, todo) {
     divContent.textContent = todo.content
     spanDelete.textContent = 'delete_forever'
     spanEdit.textContent = 'edit'
-    spanMove.textContent = 'open_with'
     inProgressLabel.textContent = 'P'
     hasFinishedLabel.textContent = 'F'
 
@@ -96,7 +97,6 @@ function createTodo(parentNode, db, todo) {
     divOptions.classList.add('options')
     spanDelete.classList.add('material-icons', 'delete-icon', 'icon')
     spanEdit.classList.add('material-icons', 'edit-icon', 'icon');
-    spanMove.classList.add('material-icons', 'move-icon')
     editButton.classList.add('edit-button')
     editInput.classList.add('edit-input')
 
@@ -109,23 +109,23 @@ function createTodo(parentNode, db, todo) {
 
 
     spanDelete.onclick = () => deleteTodo(db, parentNode, todo)
-    spanEdit.onclick = () => handleEdit(todo, divContent, editInput, editButton)
+    spanEdit.onclick = () => handleEdit(db, todo, parentNode, divContent, editInput, editButton)
 
     inProgressCheckBox.onchange = e => {
         todo.inProgress = e.target.checked
         todo.hasFinished = e.target.checked ? todo.hasFinished : false;
-        updateTodo(db, todo)
+        updateTodo(db, parentNode, todo)
     }
 
     hasFinishedCheckBox.onchange = e => {
         todo.hasFinished = e.target.checked
-        updateTodo(db, todo)
+        updateTodo(db, parentNode, todo)
     }
 
     divTodo.append(divContent, divOptions)
     inProgressLabel.append(inProgressCheckBox)
     hasFinishedLabel.append(hasFinishedCheckBox)
-    divOptions.append(spanDelete, spanEdit, spanMove, inProgressLabel, hasFinishedLabel)
+    divOptions.append(spanDelete, spanEdit, inProgressLabel, hasFinishedLabel)
 
 
     parentNode.append(divTodo)
