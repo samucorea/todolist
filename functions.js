@@ -13,6 +13,16 @@ function setSavedFilters(db, inProgressFilter, finishedFilter) {
     finishedFilter.checked = JSON.parse(db.getItem('finishedFilter'))
 }
 
+function createNotFoundElement(parentNode) {
+    const header = document.createElement('h2')
+
+    header.textContent = 'No todos found.'
+
+    header.classList.add('not-found-message')
+
+    parentNode.appendChild(header)
+}
+
 function refresh(parentNode, db, tempTodo = null) {
     parentNode.innerHTML = ''
     loadTodos(db, parentNode)
@@ -193,6 +203,10 @@ function loadTodos(db, parentNode) {
         }
     })
 
+    if (filteredTodos.length === 0) {
+        createNotFoundElement(parentNode)
+        return;
+    }
 
     for (const todo of filteredTodos) {
         createTodo(parentNode, db, todo)

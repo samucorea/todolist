@@ -172,6 +172,11 @@ ul li:not(:first-child) {
     padding-left:4rem;
 }
 
+.not-found-message{
+    margin-top:2rem;
+    color:rgb(255, 235, 205);
+}
+
 /* label.finished-label{
     display:none;
 } */
