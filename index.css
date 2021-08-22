@@ -18,6 +18,7 @@ h1{
 
 h2{
     font-size:2.4rem;
+    margin:0;
 }
 
 span{
@@ -43,6 +44,10 @@ input[type="text"]{
 input[type="checkbox"]{
     width:2.1rem;
     height:2.1rem;
+}
+
+ul{
+    list-style-type: none;
 }
 button{
    margin-left:1.4rem;
@@ -156,6 +161,15 @@ button.edit-button{
   }
 .editing-content{
     z-index:15;
+}
+
+.filters{
+    display:flex;
+    justify-content: center;
+}
+
+ul li:not(:first-child) {
+    padding-left:4rem;
 }
 
 /* label.finished-label{
