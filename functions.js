@@ -116,9 +116,15 @@ function createTodo(parentNode, db, todo) {
     if (todo.inProgress) {
         hasFinishedLabel.style.display = ''
     }
-    else {
+    else if (!todo.hasFinished) {
         hasFinishedLabel.style.display = 'none'
     }
+    else {
+        inProgressLabel.style.display = 'none'
+    }
+
+
+
 
 
     spanDelete.onclick = () => deleteTodo(db, parentNode, todo)
@@ -132,6 +138,9 @@ function createTodo(parentNode, db, todo) {
 
     hasFinishedCheckBox.onchange = e => {
         todo.hasFinished = e.target.checked
+        if (e.target.checked) {
+            todo.inProgress = false;
+        }
         updateTodo(db, parentNode, todo)
     }
 
@@ -174,8 +183,14 @@ function loadTodos(db, parentNode) {
     })
 
     const filteredTodos = todos.filter(todo => {
-        return todo.inProgress === inProgressFilter
-            && todo.hasFinished === finishedFilter
+        if (inProgressFilter && finishedFilter) {
+            return todo.inProgress
+                || todo.hasFinished
+        }
+        else {
+            return todo.inProgress === inProgressFilter
+                && todo.hasFinished === finishedFilter
+        }
     })
 
 

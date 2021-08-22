@@ -17,10 +17,6 @@ else {
 }
 
 inProgressFilter.onchange = function () {
-    if (!this.checked) {
-        db.setItem('finishedFilter', false)
-        finishedFilter.checked = false
-    }
 
     db.setItem('inProgressFilter', this.checked)
     refresh(todoList, db)
@@ -28,8 +24,6 @@ inProgressFilter.onchange = function () {
 
 finishedFilter.onchange = function () {
     db.setItem('finishedFilter', this.checked)
-    db.setItem('inProgressFilter', this.checked)
-    inProgressFilter.checked = this.checked
     refresh(todoList, db)
 }
 
