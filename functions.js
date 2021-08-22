@@ -1,16 +1,15 @@
 
-function setDefaultFilters(db, ...filters) {
+function setDefaultFilters(db) {
     db.setItem('inProgressFilter', false)
     db.setItem('finishedFilter', false)
-
-    filters.forEach(filter => {
-        filter.checked = false;
-    })
+    db.setItem('allFilter', true)
 }
 
-function setSavedFilters(db, inProgressFilter, finishedFilter) {
+function setSavedFilters(db, inProgressFilter, finishedFilter, allFilter) {
     inProgressFilter.checked = JSON.parse(db.getItem('inProgressFilter'))
     finishedFilter.checked = JSON.parse(db.getItem('finishedFilter'))
+    allFilter.checked = JSON.parse(db.getItem('allFilter'))
+
 }
 
 function createNotFoundElement(parentNode) {
@@ -171,10 +170,12 @@ function loadTodos(db, parentNode) {
     const keys = Object.keys(db).filter(key => {
         return key !== 'inProgressFilter'
             && key !== 'finishedFilter'
+            && key !== 'allFilter'
     })
 
     const inProgressFilter = JSON.parse(db.getItem('inProgressFilter'))
     const finishedFilter = JSON.parse(db.getItem('finishedFilter'))
+    const allFilter = JSON.parse(db.getItem('allFilter'))
 
     const todos = []
 
@@ -192,8 +193,12 @@ function loadTodos(db, parentNode) {
         }
     })
 
+
     const filteredTodos = todos.filter(todo => {
-        if (inProgressFilter && finishedFilter) {
+        if (allFilter) {
+            return true;
+        }
+        else if (inProgressFilter && finishedFilter) {
             return todo.inProgress
                 || todo.hasFinished
         }

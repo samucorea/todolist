@@ -4,16 +4,17 @@ const insertButton = document.querySelector('button')
 const toolbarInProgressCheckBox = document.querySelector('.input-in-progress')
 const inProgressFilter = document.querySelector('.progress-checkbox')
 const finishedFilter = document.querySelector('.finished-checkbox')
+const allFilter = document.querySelector('.all-checkbox')
 const errorMessage = document.querySelector('.error-message')
 
 const db = window.localStorage
 
 
 if (!db.getItem('inProgressFilter')) {
-    setDefaultFilters(db, inProgressFilter, finishedFilter);
+    setDefaultFilters(db);
 }
 else {
-    setSavedFilters(db, inProgressFilter, finishedFilter)
+    setSavedFilters(db, inProgressFilter, finishedFilter, allFilter)
 }
 
 inProgressFilter.onchange = function () {
@@ -24,6 +25,11 @@ inProgressFilter.onchange = function () {
 
 finishedFilter.onchange = function () {
     db.setItem('finishedFilter', this.checked)
+    refresh(todoList, db)
+}
+
+allFilter.onchange = function () {
+    db.setItem('allFilter', this.checked)
     refresh(todoList, db)
 }
 
