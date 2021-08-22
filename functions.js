@@ -165,24 +165,12 @@ function createTodo(parentNode, db, todo) {
 
 }
 
-function loadTodos(db, parentNode) {
-
-    const keys = Object.keys(db).filter(key => {
-        return key !== 'inProgressFilter'
-            && key !== 'finishedFilter'
-            && key !== 'allFilter'
-    })
+function filterTodos(todos) {
 
     const inProgressFilter = JSON.parse(db.getItem('inProgressFilter'))
     const finishedFilter = JSON.parse(db.getItem('finishedFilter'))
     const allFilter = JSON.parse(db.getItem('allFilter'))
-
-    const todos = []
-
-    for (const key of keys) {
-        const todo = JSON.parse(db.getItem(key))
-        todos.push(todo)
-    }
+    let filteredTodos;
 
     todos.sort(function compareDates(todoA, todoB) {
         if (todoA.createdAt < todoB.createdAt) {
@@ -193,20 +181,45 @@ function loadTodos(db, parentNode) {
         }
     })
 
-
-    const filteredTodos = todos.filter(todo => {
-        if (allFilter) {
-            return true;
-        }
-        else if (inProgressFilter && finishedFilter) {
+    if (allFilter) {
+        filteredTodos = todos
+    }
+    else if (inProgressFilter && finishedFilter) {
+        filteredTodos = todos.filter(todo => {
             return todo.inProgress
                 || todo.hasFinished
-        }
-        else {
+        })
+    }
+    else {
+        filteredTodos = todos.filter(todo => {
             return todo.inProgress === inProgressFilter
                 && todo.hasFinished === finishedFilter
-        }
+        })
+    }
+
+
+
+    return filteredTodos
+}
+
+function loadTodos(db, parentNode) {
+
+    const keys = Object.keys(db).filter(key => {
+        return key !== 'inProgressFilter'
+            && key !== 'finishedFilter'
+            && key !== 'allFilter'
     })
+
+
+    const todos = []
+
+    for (const key of keys) {
+        const todo = JSON.parse(db.getItem(key))
+        todos.push(todo)
+    }
+
+    const filteredTodos = filterTodos(todos)
+
 
     if (filteredTodos.length === 0) {
         createNotFoundElement(parentNode)
