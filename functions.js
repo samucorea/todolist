@@ -165,7 +165,7 @@ function createTodo(parentNode, db, todo) {
 
 }
 
-function filterTodos(todos) {
+function extractTodos(todos) {
 
     const inProgressFilter = JSON.parse(db.getItem('inProgressFilter'))
     const finishedFilter = JSON.parse(db.getItem('finishedFilter'))
@@ -218,7 +218,7 @@ function loadTodos(db, parentNode) {
         todos.push(todo)
     }
 
-    const filteredTodos = filterTodos(todos)
+    const filteredTodos = extractTodos(todos)
 
 
     if (filteredTodos.length === 0) {
