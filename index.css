@@ -126,6 +126,10 @@ label{
     flex-basis:75%;
 }
 
+.draggable{
+    cursor:move;
+}
+
 .options{
     display:flex;
     align-items: center;

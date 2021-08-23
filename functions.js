@@ -22,7 +22,7 @@ function createNotFoundElement(parentNode) {
     parentNode.appendChild(header)
 }
 
-function refresh(parentNode, db, tempTodo = null) {
+function refresh(parentNode, db) {
     parentNode.innerHTML = ''
     loadTodos(db, parentNode)
 }
@@ -86,7 +86,7 @@ function handleEdit(db, todo, parentNode, divContent, editInput, editButton) {
 }
 
 
-function createTodo(parentNode, db, todo) {
+function createTodo(db, parentNode todo) {
     const divTodo = document.createElement('div')
     const divContent = document.createElement('div')
     const divOptions = document.createElement('div')
@@ -139,15 +139,15 @@ function createTodo(parentNode, db, todo) {
     spanDelete.onclick = () => deleteTodo(db, parentNode, todo)
     spanEdit.onclick = () => handleEdit(db, todo, parentNode, divContent, editInput, editButton)
 
-    inProgressCheckBox.onchange = e => {
-        todo.inProgress = e.target.checked
-        todo.hasFinished = e.target.checked ? todo.hasFinished : false;
+    inProgressCheckBox.onchange = function () {
+        todo.inProgress = this.checked
+        todo.hasFinished = this.checked ? todo.hasFinished : false;
         updateTodo(db, parentNode, todo)
     }
 
-    hasFinishedCheckBox.onchange = e => {
-        todo.hasFinished = e.target.checked
-        if (e.target.checked) {
+    hasFinishedCheckBox.onchange = function () {
+        todo.hasFinished = this.checked
+        if (this.checked) {
             todo.inProgress = false;
         }
         updateTodo(db, parentNode, todo)
@@ -227,6 +227,6 @@ function loadTodos(db, parentNode) {
     }
 
     for (const todo of filteredTodos) {
-        createTodo(parentNode, db, todo)
+        createTodo(db, parentNode, todo)
     }
 }
