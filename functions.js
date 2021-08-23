@@ -86,7 +86,7 @@ function handleEdit(db, todo, parentNode, divContent, editInput, editButton) {
 }
 
 
-function createTodo(db, parentNode todo) {
+function createTodo(db, parentNode, todo) {
     const divTodo = document.createElement('div')
     const divContent = document.createElement('div')
     const divOptions = document.createElement('div')
