@@ -1,3 +1,6 @@
+*{
+    box-sizing: border-box;
+}
 html{
     font-size:62.5%;
     margin:0;
@@ -80,6 +83,7 @@ label{
     display:flex;
     justify-content: center;
     margin:0 auto;
+    align-items: center;
 }
 
 .container{
@@ -122,8 +126,11 @@ label{
     font-size:2.4rem;
     font-weight: 300;
     display:flex;
+    word-wrap: break-word;
+    word-break: break-all;
     justify-content: space-between;
     flex-basis:75%;
+    text-align: left;
 }
 
 .draggable{
@@ -168,8 +175,15 @@ button.edit-button{
 }
 
 .filters{
+    margin-top:3rem;
     display:flex;
     justify-content: center;
+    background-color:darkslategrey;
+    width:80%;
+    margin: 2rem auto;
+    padding:2rem;
+    width:60%;
+    border-radius: 5px;
 }
 
 ul li:not(:first-child) {
@@ -181,6 +195,35 @@ ul li:not(:first-child) {
     color:rgb(255, 235, 205);
 }
 
-/* label.finished-label{
-    display:none;
-} */
+@media screen and (max-width:768px) {
+    .toolbar{
+        flex-direction: column;
+    }
+    input{
+        width:90%;
+    }
+    button{
+        margin:1.5rem;
+    }
+    .container{
+        width:100vw;
+        max-width: 100%;
+    }
+   .todo-list{
+       width:100%;
+   }
+
+   .filters{
+
+       flex-direction: column;
+       align-items: center;
+       padding:0;
+   }
+   ul li:not(:first-child) {
+       padding:0;
+   }
+
+   .options span{
+       padding-right:1rem;
+   }
+}
