@@ -47,12 +47,12 @@ function updateTodo(db, parentNode, todoUpdated) {
     refresh(parentNode, db)
 }
 
-function handleEdit(db, todo, parentNode, divContent, editInput, editButton) {
+function handleEdit(db, todo, parentNode, divContent, editInput, editButton, cancelEditButton) {
     const overlay = document.querySelector('.overlay')
     divContent.textContent = ''
     editInput.value = todo.content
 
-    divContent.append(editInput, editButton)
+    divContent.append(editInput, editButton, cancelEditButton)
 
     divContent.classList.add('editing-content')
     overlay.style.display = 'initial'
@@ -67,10 +67,7 @@ function handleEdit(db, todo, parentNode, divContent, editInput, editButton) {
     document.addEventListener('keydown', e => {
 
         if (e.key === 'Escape') {
-            divContent.innerHTML = ''
-            divContent.textContent = todo.content
-            divContent.classList.remove('editing-content')
-            overlay.style.display = 'none'
+            cancelEditButton.click()
         }
 
 
@@ -81,6 +78,13 @@ function handleEdit(db, todo, parentNode, divContent, editInput, editButton) {
         todo.content = editInput.value
         divContent.classList.remove('editing-content')
         updateTodo(db, parentNode, todo)
+        overlay.style.display = 'none'
+    }
+
+    cancelEditButton.onclick = () => {
+        divContent.innerHTML = ''
+        divContent.textContent = todo.content
+        divContent.classList.remove('editing-content')
         overlay.style.display = 'none'
     }
 }
@@ -99,6 +103,7 @@ function createTodo(db, parentNode, todo) {
     const hasFinishedCheckBox = document.createElement('input')
     const editInput = document.createElement('input')
     const editButton = document.createElement('button')
+    const cancelEditButton = document.createElement('button')
 
     editInput.type = 'text'
     editInput.maxLength = inputTodo.maxLength
@@ -108,6 +113,7 @@ function createTodo(db, parentNode, todo) {
     hasFinishedCheckBox.checked = todo.hasFinished
 
     editButton.textContent = 'Edit'
+    cancelEditButton.textContent = 'Cancel'
     divContent.textContent = todo.content
     spanDelete.textContent = 'delete_forever'
     spanEdit.textContent = 'edit'
@@ -121,6 +127,7 @@ function createTodo(db, parentNode, todo) {
     spanEdit.classList.add('material-icons', 'edit-icon', 'icon');
     editButton.classList.add('edit-button')
     editInput.classList.add('edit-input')
+    cancelEditButton.classList.add('cancel-button')
 
     if (todo.inProgress) {
         hasFinishedLabel.style.display = ''
@@ -137,7 +144,7 @@ function createTodo(db, parentNode, todo) {
 
 
     spanDelete.onclick = () => deleteTodo(db, parentNode, todo)
-    spanEdit.onclick = () => handleEdit(db, todo, parentNode, divContent, editInput, editButton)
+    spanEdit.onclick = () => handleEdit(db, todo, parentNode, divContent, editInput, editButton, cancelEditButton)
 
     inProgressCheckBox.onchange = function () {
         todo.inProgress = this.checked

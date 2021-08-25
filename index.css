@@ -147,12 +147,17 @@ label{
 }
 
 
-input.edit-input{
+/* input.edit-input{
     width:75%;
-}
+} */
 
 button.edit-button{
     background-color: teal;
+    margin-bottom:0;
+}
+
+.cancel-button{
+    display:none;
 }
 
 .error-message{
@@ -211,6 +216,13 @@ ul li:not(:first-child) {
     }
    .todo-list{
        width:100%;
+   }
+
+   .todo .content{
+       flex-direction: column;
+   }
+   .cancel-button{
+       display:block;
    }
 
    .filters{
